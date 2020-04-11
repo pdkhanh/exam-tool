@@ -2,11 +2,11 @@
    "inputFileName":"input.xlsx",
    "outputFileName":"./out/output_%d.xlsx",
    "outputSheetName":"Câu hỏi",
-   "numberOfFileToGenerate": 3,
+   "numberOfFileToGenerate": 30,
    "configuration":[
       {
          "sheetName":"Trên 10 tháng",
-         "numberQuestion":25
+         "numberQuestion":35
       },
       {
          "sheetName":"Trên 18 tháng",
@@ -19,10 +19,6 @@
       {
          "sheetName":"Trên 36 tháng",
          "numberQuestion":5
-      },
-      {
-         "sheetName":"test",
-         "numberQuestion":1
       }
    ]
 }

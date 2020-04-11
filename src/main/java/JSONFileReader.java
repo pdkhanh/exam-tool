@@ -2,10 +2,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.*;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
+import java.io.*;
 
 
 import java.util.ArrayList;
@@ -13,12 +10,18 @@ import java.util.Iterator;
 import java.util.List;
 
 public class JSONFileReader {
-    public static Configuration readConfiguration() throws Exception{
+    public static Configuration readConfiguration(){
         JSONParser parser = new JSONParser();
         Configuration config = new Configuration();
 
         try {
-            Object obj = parser.parse(new FileReader("./config.json"));
+            File fileDir = new File("./config.json");
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            new FileInputStream(fileDir), "UTF8"));
+
+            Object obj = parser.parse(in);
 
             JSONObject jsonObject =  (JSONObject) obj;
 

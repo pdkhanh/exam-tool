@@ -5,37 +5,20 @@ import java.util.Random;
 
 public class App {
     public static void main(String[] args) throws Exception {
-
-        generateFile();
-
-
-//        List<Data> master = ExcelReader.readExcel();
-//
-//        Configuration config = JSONFileReader.readConfiguration();
-//        final List<Question> masterList = new ArrayList<>();
-//
-//        for (Data listQuestion : master) {
-//            String sheetName = listQuestion.getSheetName();
-//            int numberOfKeep = 0;
-//            for (KeepQuesion keep : config.getKeepQuesionList()) {
-//                if (keep.getSheetName().equals(sheetName)) {
-//                    numberOfKeep = (int) keep.getNumberOfQuestion();
-//                    break;
-//                }
-//            }
-//            removeItem(listQuestion.getQuestionList(), numberOfKeep);
-//            listQuestion.getQuestionList().forEach(e -> masterList.add(e));
-//        }
-//
-//        Collections.shuffle(masterList);
-//
-//        ExcelReader.writeExcel2(masterList, config.getOutputSheet(), config.getOutputFile());
+        try {
+            generateFile();
+        }catch (Exception ex){
+            ex.printStackTrace();
+            System.out.println(ex.toString());
+        }
     }
 
     private static List<Question> removeItem(List<Question> questionList, int numberOfKeep) {
         int numberOfRemoval = questionList.size() - numberOfKeep;
+        System.out.println(numberOfRemoval);
         Random random = new Random();
         for (int i = 0; i < numberOfRemoval; i++) {
+            System.out.println(questionList.size());
             int removeIndex = random.nextInt(questionList.size() - 1);
             questionList.remove(removeIndex);
         }
@@ -63,9 +46,10 @@ public class App {
                 }
                 Collections.shuffle(masterList);
                 String outputFileName = String.format(config.getOutputFile(), i);
-                ExcelReader.writeExcel2(masterList, config.getOutputSheet(), outputFileName);
+                ExcelReader.writeExce3(masterList, config.getOutputSheet(), outputFileName);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.out.println("Error: \n" + ex.toString());
         }
     }

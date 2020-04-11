@@ -20,14 +20,14 @@ public class ExcelReader {
         System.out.println("Working on sheet: " + sheet.getSheetName());
         DataFormatter dataFormatter = new DataFormatter();
 
-        for (Row row: sheet) {
-            if(row.getRowNum() < 4){
+        for (Row row : sheet) {
+            if (row.getRowNum() < 4) {
                 continue;
             }
             Question question = new Question();
-            for(Cell cell: row) {
+            for (Cell cell : row) {
                 String cellValue = dataFormatter.formatCellValue(cell);
-                switch (cell.getColumnIndex()){
+                switch (cell.getColumnIndex()) {
                     case 0:
                         question.setSequence(cellValue);
                         break;
@@ -49,8 +49,8 @@ public class ExcelReader {
                     case 6:
                         question.setCorrectAnswer(cellValue);
                         break;
-                        default:
-                            System.out.println("No data at " + cell.getColumnIndex());
+                    default:
+                        System.out.println("No data at " + cell.getColumnIndex());
                 }
             }
             listQuestion.add(question);
@@ -63,7 +63,7 @@ public class ExcelReader {
         List<Data> masterList = new ArrayList<>();
         Workbook workbook = WorkbookFactory.create(new File(INPUT_EXCEL_PATH));
 
-        for(int i = 0; i<workbook.getNumberOfSheets(); i++) {
+        for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             Sheet sheet = workbook.getSheetAt(i);
             System.out.println("Working on sheet: " + sheet.getSheetName());
             DataFormatter dataFormatter = new DataFormatter();
@@ -111,24 +111,23 @@ public class ExcelReader {
     }
 
 
-
-    public static void writeExcel(List<Question> listQuestion, String sheetName) throws Exception{
+    public static void writeExcel(List<Question> listQuestion, String sheetName) throws Exception {
         Workbook workbook;
         try {
             workbook = new XSSFWorkbook(new FileInputStream(OUTPUT_EXCEL_PATH));
-        }catch (Exception ex){
+        } catch (Exception ex) {
             workbook = new XSSFWorkbook();
         }
 
         Sheet sheet = workbook.createSheet(sheetName);
 
         Row headerRow = sheet.createRow(0);
-        for(int i = 0; i< columns.length; i++){
+        for (int i = 0; i < columns.length; i++) {
             headerRow.createCell(i).setCellValue(columns[i]);
         }
 
         int rowNum = 1;
-        for(Question question: listQuestion) {
+        for (Question question : listQuestion) {
             Row row = sheet.createRow(rowNum++);
 
             row.createCell(0)
@@ -153,7 +152,7 @@ public class ExcelReader {
                     .setCellValue(question.getCorrectAnswer());
         }
 
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             sheet.autoSizeColumn(i);
         }
 
@@ -163,17 +162,17 @@ public class ExcelReader {
         workbook.close();
     }
 
-    public static void writeExcel2(List<Question> listQuestion, String sheetName, String name) throws Exception{
+    public static void writeExcel2(List<Question> listQuestion, String sheetName, String name) throws Exception {
         Workbook workbook;
         try {
             workbook = new XSSFWorkbook(new FileInputStream(OUTPUT_EXCEL_PATH));
-        }catch (Exception ex){
+        } catch (Exception ex) {
             workbook = new XSSFWorkbook();
         }
 
         //Generate path
         File path = new File(name.substring(0, name.lastIndexOf("/")));
-        if(!path.exists()) {
+        if (!path.exists()) {
             path.mkdir();
         }
 
@@ -190,7 +189,7 @@ public class ExcelReader {
         CellStyle styleWrapText = workbook.createCellStyle();
         styleWrapText.setWrapText(true);
 
-        for(Question question: listQuestion) {
+        for (Question question : listQuestion) {
             Row row = sheet.getRow(rowNum++);
             System.out.println(row.getCell(0));
 
@@ -229,5 +228,101 @@ public class ExcelReader {
         workbook.write(fileOut);
         fileOut.close();
         workbook.close();
+    }
+
+    public static void writeExce3(List<Question> listQuestion, String sheetName, String name) throws Exception {
+        Workbook workbook;
+        try {
+            workbook = new XSSFWorkbook(new FileInputStream(OUTPUT_EXCEL_PATH));
+        } catch (Exception ex) {
+            workbook = new XSSFWorkbook();
+        }
+
+        //Generate path
+        File path = new File(name.substring(0, name.lastIndexOf("/")));
+        if (!path.exists()) {
+            path.mkdir();
+        }
+
+        Sheet sheet = workbook.getSheetAt(0);
+
+        int rowNum = 1;
+
+        Font font = workbook.createFont();
+        font.setBold(true);
+        CellStyle styleBold = workbook.createCellStyle();
+        styleBold.setFont(font);
+        //styleBold.setWrapText(true);
+
+        CellStyle styleWrapText = workbook.createCellStyle();
+        styleWrapText.setWrapText(true);
+
+        CellStyle styleBackgroundColorYellow = workbook.createCellStyle();
+        styleBackgroundColorYellow.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        styleBackgroundColorYellow.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        for (Question question : listQuestion) {
+            Row row = sheet.createRow(rowNum++);
+            setCellValueStyle(row.createCell(0), question.getDescription(), styleBold);
+            System.out.println(row.getCell(0));
+
+            for (int i = 0; i < 4; i++) {
+                row = sheet.createRow(rowNum++);
+                Cell cell = row.createCell(1);
+                Cell cellPoint = row.createCell(2);
+
+                if (i == 0 && question.getCorrectAnswer().equals("A")) {
+                    setCellValueStyle(cell, question.answerA, styleBackgroundColorYellow);
+                    cellPoint.setCellValue(1);
+                    continue;
+                } else if (i == 0) {
+                    cell.setCellValue(question.getAnswerA());
+                    cellPoint.setCellValue(0);
+                    continue;
+                }
+
+                if (i == 1 && question.getCorrectAnswer().equals("B")) {
+                    setCellValueStyle(cell, question.answerB, styleBackgroundColorYellow);
+                    cellPoint.setCellValue(1);
+                    continue;
+                } else if (i == 1) {
+                    cell.setCellValue(question.getAnswerB());
+                    cellPoint.setCellValue(0);
+                    continue;
+                }
+
+                if (i == 2 && question.getCorrectAnswer().equals("C")) {
+                    setCellValueStyle(cell, question.answerC, styleBackgroundColorYellow);
+                    cellPoint.setCellValue(1);
+                    continue;
+                } else if (i == 2) {
+                    cell.setCellValue(question.getAnswerC());
+                    cellPoint.setCellValue(0);
+                    continue;
+                }
+
+                if (i == 3 && question.getCorrectAnswer().equals("D")) {
+                    setCellValueStyle(cell, question.answerD, styleBackgroundColorYellow);
+                    cellPoint.setCellValue(1);
+                    continue;
+                } else if (i == 3) {
+                    cell.setCellValue(question.getAnswerD());
+                    cellPoint.setCellValue(0);
+                    continue;
+                }
+            }
+        }
+
+        workbook.setSheetName(0, sheetName);
+        FileOutputStream fileOut = new FileOutputStream(name);
+        workbook.write(fileOut);
+        fileOut.close();
+        workbook.close();
+        System.out.println("Generated " + name);
+    }
+
+    private static void setCellValueStyle(Cell cell, String value, CellStyle cellStyle) {
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue(value);
     }
 }

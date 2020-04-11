@@ -1,5 +1,7 @@
+Configuration.class
+JSONFileReader.class
+KeepQuesion.class
 ExcelReader.class
 App.class
-Configuration.class
-ListQuestion.class
+Data.class
 Question.class
